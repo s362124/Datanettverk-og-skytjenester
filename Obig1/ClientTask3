@@ -1,0 +1,27 @@
+import socket #import socket to allow for the client to create a socket object
+import sys  #import sys to allow for arguments to be taken in from threading import Thread 
+from threading import Thread #from threading import Thread to allow for multithreaded communication
+
+def Main(): 
+    #set server host and port
+    serverHost = "localhost" 
+    serverPort = int(sys.argv[2]) 
+    clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #create a clientSocket object with AF_INET and SOCK_STREAM parameters 
+    clientSocket.connect((serverHost, serverPort)) #connect the clientSocket to the server
+    message = input("You can write here: ")
+
+    while True: #This loop will keep asking the user whether they want to continue or not
+        question =  input("\nDo you want to write a message(y/n): ") #This line is asking the user for input
+        if question == "y": #This line is sending the input from the user to the server
+           message = input("Write here: ") #Prompt the user for a message
+           clientSocket.send(message.encode("ascii")) #Send the message, encoded in ASCII  
+           data = clientSocket.recv(1024) #Receive the data from the server
+           print("Received from the server: ", str(data.decode("ascii"))) #This line is printing the decoded response from the server
+           continue
+        else:
+           break #The loop will break if the user does not want to continue
+        clientSocket.close() #Close the connection to the client socket
+
+        if __name__ == "__main__": #Check if the program is being run as the main function
+         Main()
+
